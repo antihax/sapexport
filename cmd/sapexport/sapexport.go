@@ -18,8 +18,8 @@ func main() {
 
 	var cmdRoleUsers = &cobra.Command{
 		Use:   "roleusers [role]",
-		Short: "Extract a table to JSON",
-		Long:  `table will extract a table from the SAP system and return a JSON representation.`,
+		Short: "Export a list of users in a role to JSON",
+		Long:  `roleusers will extract list of users with a specific role from the SAP system and return a JSON representation.`,
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			s := sap.RFC{}
