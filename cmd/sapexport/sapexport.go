@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/antihax/sapexport/cmd/sapexport/sap"
 	"github.com/sap/gorfc/gorfc"
@@ -73,12 +74,20 @@ func main() {
 
 	rootCmd.AddCommand(cmdRoleUsers)
 
-	rootCmd.PersistentFlags().StringVarP(&abapSystem.User, "user", "u", "SAP*", "RFC Username")
-	rootCmd.PersistentFlags().StringVarP(&abapSystem.Passwd, "pass", "p", "PASS", "RFC Password")
-	rootCmd.PersistentFlags().StringVarP(&abapSystem.Lang, "language", "l", "EN", "System Language")
-	rootCmd.PersistentFlags().StringVarP(&abapSystem.Client, "client", "c", "001", "System Client")
-	rootCmd.PersistentFlags().StringVarP(&abapSystem.Ashost, "address", "a", "localhost", "System Address")
-	rootCmd.PersistentFlags().StringVarP(&abapSystem.Saprouter, "router", "r", "", "Router")
+	rootCmd.PersistentFlags().StringVarP(&abapSystem.User, "user", "u", getenv("SAPRFC_USER", ""), "RFC Username")
+	rootCmd.PersistentFlags().StringVarP(&abapSystem.Passwd, "pass", "p", getenv("SAPRFC_PASS", ""), "RFC Password")
+	rootCmd.PersistentFlags().StringVarP(&abapSystem.Lang, "language", "l", getenv("SAPRFC_LANGUAGE", "EN"), "System Language")
+	rootCmd.PersistentFlags().StringVarP(&abapSystem.Client, "client", "c", getenv("SAPRFC_CLIENT", "001"), "System Client")
+	rootCmd.PersistentFlags().StringVarP(&abapSystem.Ashost, "address", "a", getenv("SAPRFC_ADDRESS", "localhost"), "System Address")
+	rootCmd.PersistentFlags().StringVarP(&abapSystem.Saprouter, "router", "r", getenv("SAPRFC_ROUTER", ""), "Router")
 
 	rootCmd.Execute()
+}
+
+func getenv(key, fallback string) string {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		return fallback
+	}
+	return value
 }

@@ -14,4 +14,4 @@ debug
 *.out
 
 *.trc
-./bin/*
+/bin/*
