@@ -11,6 +11,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var abapSystem gorfc.ConnectionParameter
+
+func initConfig() {
+	if abapSystem.Passwd == "" {
+		abapSystem.Passwd = getenv("SAPRFC_USER", "")
+	}
+}
+
 func main() {
 	var (
 		abapSystem gorfc.ConnectionParameter
@@ -67,15 +75,15 @@ func main() {
 		},
 	}
 
-	var rootCmd = &cobra.Command{Use: "app"}
+	var rootCmd = &cobra.Command{Use: "sapexport"}
 	rootCmd.AddCommand(cmdTable)
 
 	cmdTable.Flags().StringVarP(&where, "where", "w", "", "ABAP WHERE clause to filter the table")
-
+	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(cmdRoleUsers)
 
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.User, "user", "u", getenv("SAPRFC_USER", ""), "RFC Username (or env SAPRFC_USER)")
-	rootCmd.PersistentFlags().StringVarP(&abapSystem.Passwd, "pass", "p", getenv("SAPRFC_PASS", ""), "RFC Password (or env SAPRFC_PASS)")
+	rootCmd.PersistentFlags().StringVarP(&abapSystem.Passwd, "pass", "p", "", "RFC Password (or env SAPRFC_PASS)")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Lang, "language", "l", getenv("SAPRFC_LANGUAGE", "EN"), "System Language (or env SAPRFC_LANGUAGE)")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Client, "client", "c", getenv("SAPRFC_CLIENT", "001"), "System Client (or env SAPRFC_CLIENT)")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Ashost, "address", "a", getenv("SAPRFC_ADDRESS", "localhost"), "System Address (or env SAPRFC_ADDRESS)")
