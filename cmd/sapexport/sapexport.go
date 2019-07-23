@@ -86,7 +86,9 @@ func main() {
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Passwd, "pass", "p", "", "RFC Password (or env SAPRFC_PASS)")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Lang, "language", "l", getenv("SAPRFC_LANGUAGE", "EN"), "System Language (or env SAPRFC_LANGUAGE)")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Client, "client", "c", getenv("SAPRFC_CLIENT", "001"), "System Client (or env SAPRFC_CLIENT)")
-	rootCmd.PersistentFlags().StringVarP(&abapSystem.Ashost, "address", "a", getenv("SAPRFC_ADDRESS", "localhost"), "System Address (or env SAPRFC_ADDRESS)")
+	rootCmd.PersistentFlags().StringVarP(&abapSystem.Ashost, "address", "a", getenv("SAPRFC_ADDRESS", ""), "System Address (or env SAPRFC_ADDRESS)")
+	rootCmd.PersistentFlags().StringVar(&abapSystem.SysID, "sysid", "", "SystemID")
+	rootCmd.PersistentFlags().StringVarP(&abapSystem.Mshost, "msgserver", "m", getenv("SAPRFC_MSGSVR", ""), "System Address (or env SAPRFC_MSGSVR)")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Saprouter, "router", "r", getenv("SAPRFC_ROUTER", ""), "Router (or env SAPRFC_ROUTER)")
 
 	rootCmd.Execute()
