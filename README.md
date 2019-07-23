@@ -32,5 +32,5 @@ ACTVT 03
 or
 
 S_TABU_NAM
-TABNAME
+TABNAME for tables
 ACTVT 03
