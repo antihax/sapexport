@@ -1,7 +1,8 @@
 ## ALPHA - Subject to change
 
 ## Usage:
-  sapexport [command]
+```
+sapexport [command]
 
 Available Commands:
   help        Help about any command
@@ -18,19 +19,23 @@ Flags:
   -u, --user string       RFC Username (or env SAPRFC_USER)
 
 Use "sapexport [command] --help" for more information about a command.
+```
 
 ## SAP NW Profile
+```
 S_RFC with 
 RFC_TYPE FUNC
 RFC_NAME /BODS/RFC_READ_TABLE2 ESS_USERS_OF_ROLE_GET
 ACTVT 16
-
+```
+```
 S_TABU_DIS 
 DICBERCLS for table groups
 ACTVT 03
-
+```
 or
-
+```
 S_TABU_NAM
 TABNAME for tables
 ACTVT 03
+```
