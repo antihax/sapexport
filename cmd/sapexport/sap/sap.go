@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strconv"
 	"strings"
-
+	"os"
 	"github.com/sap/gorfc/gorfc"
 )
 
@@ -15,6 +15,9 @@ type RFC struct {
 
 // Connect to the SAP ECC/S4 system
 func (s *RFC) Connect(g gorfc.ConnectionParameter) error {
+	if g.Passwd == "" {
+		g.Passwd = os.Getenv("SAPRFC_PASS")
+	}
 	c, err := gorfc.ConnectionFromParams(g)
 	s.conn = c
 	return err

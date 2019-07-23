@@ -13,12 +13,6 @@ import (
 
 var abapSystem gorfc.ConnectionParameter
 
-func initConfig() {
-	if abapSystem.Passwd == "" {
-		abapSystem.Passwd = getenv("SAPRFC_USER", "")
-	}
-}
-
 func main() {
 	var (
 		abapSystem gorfc.ConnectionParameter
@@ -36,7 +30,7 @@ func main() {
 			if err != nil {
 				log.Fatalln(err)
 			}
-
+			
 			rows, err := s.UsersOfRole(args[0])
 			if err != nil {
 				log.Fatalln(err)
@@ -57,6 +51,7 @@ func main() {
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			s := sap.RFC{}
+
 			err := s.Connect(abapSystem)
 			if err != nil {
 				log.Fatalln(err)
@@ -79,7 +74,6 @@ func main() {
 	rootCmd.AddCommand(cmdTable)
 
 	cmdTable.Flags().StringVarP(&where, "where", "w", "", "ABAP WHERE clause to filter the table")
-	cobra.OnInitialize(initConfig)
 	rootCmd.AddCommand(cmdRoleUsers)
 
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.User, "user", "u", getenv("SAPRFC_USER", ""), "RFC Username (or env SAPRFC_USER)")
@@ -87,7 +81,7 @@ func main() {
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Lang, "language", "l", getenv("SAPRFC_LANGUAGE", "EN"), "System Language (or env SAPRFC_LANGUAGE)")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Client, "client", "c", getenv("SAPRFC_CLIENT", "001"), "System Client (or env SAPRFC_CLIENT)")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Ashost, "address", "a", getenv("SAPRFC_ADDRESS", ""), "System Address (or env SAPRFC_ADDRESS)")
-	rootCmd.PersistentFlags().StringVar(&abapSystem.SysID, "sysid", "", "SystemID")
+	rootCmd.PersistentFlags().StringVar(&abapSystem.Sysnr, "sysnr", "", "System Instance")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Mshost, "msgserver", "m", getenv("SAPRFC_MSGSVR", ""), "System Address (or env SAPRFC_MSGSVR)")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Saprouter, "router", "r", getenv("SAPRFC_ROUTER", ""), "Router (or env SAPRFC_ROUTER)")
 
