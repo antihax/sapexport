@@ -2,9 +2,10 @@ package sap
 
 import (
 	"errors"
+	"os"
 	"strconv"
 	"strings"
-	"os"
+
 	"github.com/sap/gorfc/gorfc"
 )
 
@@ -26,6 +27,11 @@ func (s *RFC) Connect(g gorfc.ConnectionParameter) error {
 // Disconnect from the SAP ECC/S4 system
 func (s *RFC) Disconnect() error {
 	return s.conn.Close()
+}
+
+// Call a function module and return the results
+func (s *RFC) Call(function string, params map[string]interface{}) (map[string]interface{}, error) {
+	return s.conn.Call(function, params)
 }
 
 // UsersOfRole calls RFC ESS_USERS_OF_ROLE_GET to list users with a specific role

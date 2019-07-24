@@ -30,8 +30,67 @@ func main() {
 			if err != nil {
 				log.Fatalln(err)
 			}
-			
+
 			rows, err := s.UsersOfRole(args[0])
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			j, err := json.MarshalIndent(rows, "", "  ")
+			if err != nil {
+				log.Fatalln(err)
+			}
+			fmt.Printf("%s\n", j)
+		},
+	}
+
+	var cmdUserProfiles = &cobra.Command{
+		Use:   "userprofiles [user]",
+		Short: "List profiles for a user",
+		Long:  `userprofiles will list profiles for a user.`,
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			s := sap.RFC{}
+
+			err := s.Connect(abapSystem)
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			params := map[string]interface{}{
+				"USER_NAME": args[0],
+			}
+			rows, err := s.Call("SUSR_GET_PROFILES_OF_USER_RFC", params)
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			j, err := json.MarshalIndent(rows, "", "  ")
+			if err != nil {
+				log.Fatalln(err)
+			}
+			fmt.Printf("%s\n", j)
+		},
+	}
+	var cmdProfileUsers = &cobra.Command{
+		Use:   "profileusers [profile]",
+		Short: "List users with profile",
+		Long:  `profileusers will list users with a given profile.`,
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			s := sap.RFC{}
+
+			err := s.Connect(abapSystem)
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			params := map[string]interface{}{
+				"PROFILES": []map[string]interface{}{map[string]interface{}{
+					"PROFILE": args[0],
+				}},
+			}
+			rows, err := s.Call("SUSR_GET_USERS_WITH_PROFS_RFC", params)
 			if err != nil {
 				log.Fatalln(err)
 			}
@@ -75,6 +134,8 @@ func main() {
 
 	cmdTable.Flags().StringVarP(&where, "where", "w", "", "ABAP WHERE clause to filter the table")
 	rootCmd.AddCommand(cmdRoleUsers)
+	rootCmd.AddCommand(cmdProfileUsers)
+	rootCmd.AddCommand(cmdUserProfiles)
 
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.User, "user", "u", getenv("SAPRFC_USER", ""), "RFC Username (or env SAPRFC_USER)")
 	rootCmd.PersistentFlags().StringVarP(&abapSystem.Passwd, "pass", "p", "", "RFC Password (or env SAPRFC_PASS)")
