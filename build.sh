@@ -1,5 +1,5 @@
 #!/bin/bash
 go get -u ./...
 env GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go get -u ./...
-env GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -o ./bin/sapexport.exe ./cmd/sapexport 
-env GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -o ./bin/sapexport ./cmd/sapexport 
+env GOOS=windows GOARCH=amd64 CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc go build -o ./bin/sapexport.exe ./cmd
+env GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -o ./bin/sapexport ./cmd 

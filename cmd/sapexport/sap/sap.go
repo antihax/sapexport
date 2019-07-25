@@ -34,19 +34,6 @@ func (s *RFC) Call(function string, params map[string]interface{}) (map[string]i
 	return s.conn.Call(function, params)
 }
 
-// UsersOfRole calls RFC ESS_USERS_OF_ROLE_GET to list users with a specific role
-func (s *RFC) UsersOfRole(roleName string) (map[string]interface{}, error) {
-	params := map[string]interface{}{
-		"ROLE": roleName,
-	}
-	r, err := s.conn.Call("ESS_USERS_OF_ROLE_GET", params)
-	if err != nil {
-		return nil, err
-	}
-
-	return r, err
-}
-
 // ReadTable calls RFC /BODS/RFC_READ_TABLE2 with an optional OPTIONS text containing
 // an ABAP where clause
 func (s *RFC) ReadTable(tableName string, where string) ([]map[string]string, error) {

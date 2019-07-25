@@ -6,7 +6,6 @@ sapexport [command]
 
 Available Commands:
   help        Help about any command
-  roleusers   Export a list of users in a role to JSON
   table       Extract a table to JSON
 
 Flags:
@@ -23,20 +22,80 @@ Use "sapexport [command] --help" for more information about a command.
 
 ## SAP NW Profile
 ```
-S_RFC with 
-RFC_TYPE FUNC
-RFC_NAME /BODS/RFC_READ_TABLE2 ESS_USERS_OF_ROLE_GET
-ACTVT 16
-```
-and
-```
-S_TABU_DIS 
-DICBERCLS for table groups
-ACTVT 03
-```
-or
-```
-S_TABU_NAM
-TABNAME for tables
-ACTVT 03
+  |   |   |--5  T-NL870003   <PRO> Profile for role X:SAPEXPORT                                
+  |   |       |
+  |   |       |--5  S_DSAUTH   <OBJ> DataServices: Auth Object                                   
+  |   |       |   |
+  |   |       |   |--5  T-NL87000300 <AUT>                                                             
+  |   |       |       |
+  |   |       |       |--5  ACTVT      <FLD> Activity                                                    
+  |   |       |           |
+  |   |       |           |-----16                                                                         
+  |   |       |
+  |   |       |--5  S_RFC      <OBJ> Authorization Check for RFC Access                          
+  |   |       |   |
+  |   |       |   |--5  T-NL87000300 <AUT>                                                             
+  |   |       |       |
+  |   |       |       |--5  ACTVT      <FLD> Activity                                                    
+  |   |       |       |   |
+  |   |       |       |   |-----16                                                                         
+  |   |       |       |
+  |   |       |       |--5  RFC_NAME   <FLD> Name (Whitelist) of RFC object to which access is allowed   
+  |   |       |       |   |
+  |   |       |       |   |-----/BODS/RFC_READ_TABLE2                                                      
+  |   |       |       |   |-----DDIF_FIELDINFO_GET
+  |   |       |       |   |-----RFCPING
+  |   |       |       |   |-----RFC_GET_FUNCTION_INTERFACE
+  |   |       |       |   |-----SUSR_GET_PROFILES_OF_USER_RFC
+  |   |       |       |   |-----SUSR_GET_USERS_WITH_PROFS_RFC
+  |   |       |       |   |-----SUSR_SUIM_API_RSUSR002
+  |   |       |       |   |-----SUSR_SUIM_API_RSUSR008_009_NEW
+  |   |       |       |   |-----SUSR_SUIM_API_RSUSR020
+  |   |       |       |   |-----SUSR_SUIM_API_RSUSR050_AUTH
+  |   |       |       |   |-----SUSR_SUIM_API_RSUSR050_PROF
+  |   |       |       |   |-----SUSR_SUIM_API_RSUSR050_ROLE
+  |   |       |       |   |-----SUSR_SUIM_API_RSUSR050_USER
+  |   |       |       |   |-----SUSR_SUIM_API_RSUSR070
+  |   |       |       |   |-----SUSR_SUIM_API_RSUSR100N
+  |   |       |       |   |-----SUSR_SUIM_API_RSUSR200
+  |   |       |       |
+  |   |       |       |--5  RFC_TYPE   <FLD> Type of RFC object to which access is to be allowed         
+  |   |       |           |
+  |   |       |           |-----FUNC                                                                       
+  |   |       |
+  |   |       |--5  S_TABU_DIS <OBJ> Table Maintenance (using standard tools such as SM30)       
+  |   |       |   |
+  |   |       |   |--5  T-NL87000300 <AUT>                                                             
+  |   |       |       |
+  |   |       |       |--5  ACTVT      <FLD> Activity                                                    
+  |   |       |       |   |
+  |   |       |       |   |-----03                                                                         
+  |   |       |       |
+  |   |       |       |--5  DICBERCLS  <FLD> Table Authorization Group                                   
+  |   |       |           |
+  |   |       |           |-----*                                                                          
+  |   |       |
+  |   |       |--5  S_USER_GRP <OBJ> User Master Maintenance: User Groups                        
+  |   |       |   |
+  |   |       |   |--5  T-NL87000300 <AUT>                                                             
+  |   |       |       |
+  |   |       |       |--5  ACTVT      <FLD> Activity                                                    
+  |   |       |       |   |
+  |   |       |       |   |-----03                                                                         
+  |   |       |       |
+  |   |       |       |--5  CLASS      <FLD> User group in user master maintenance                       
+  |   |       |           |
+  |   |       |           |-----*                                                                          
+  |   |       |
+  |   |       |--5  S_USER_PRO <OBJ> User Master Maintenance: Authorization Profile              
+  |   |           |
+  |   |           |--5  T-NL87000300 <AUT>                                                             
+  |   |               |
+  |   |               |--5  ACTVT      <FLD> Activity                                                    
+  |   |               |   |
+  |   |               |   |-----03                                                                         
+  |   |               |
+  |   |               |--5  PROFILE    <FLD> Auth. profile in user master maintenance                    
+  |   |                   |
+  |   |                   |-----*                                                                          
 ```
