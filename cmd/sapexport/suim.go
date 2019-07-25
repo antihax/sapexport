@@ -10,39 +10,6 @@ import (
 )
 
 func init() {
-	var where string
-
-	var cmdUserProfiles = &cobra.Command{
-		Use:   "userprofiles [user]",
-		Short: "List profiles for a user",
-		Long:  `userprofiles will list profiles for a user.`,
-		Args:  cobra.MinimumNArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			s := sap.RFC{}
-
-			err := s.Connect(abapSystem)
-			if err != nil {
-				log.Fatalln(err)
-			}
-
-			params := map[string]interface{}{
-				"IT_VALUES": []map[string]interface{}{
-					map[string]interface{}{
-						"IT_VALUES": args[0],
-					}},
-			}
-			rows, err := s.Call("SUSR_GET_PROFILES_OF_USER_RFC", params)
-			if err != nil {
-				log.Fatalln(err)
-			}
-
-			j, err := json.MarshalIndent(rows, "", "  ")
-			if err != nil {
-				log.Fatalln(err)
-			}
-			fmt.Printf("%s\n", j)
-		},
-	}
 
 	/*
 		    - SUSR_SUIM_API_RSUSR002: Users by complex selection criteria
@@ -56,10 +23,56 @@ func init() {
 		    - SUSR_SUIM_API_RSUSR100N: Change documents for users
 			- SUSR_SUIM_API_RSUSR200: Users according to logon date and password change
 	*/
-	var cmdFindUsers = &cobra.Command{
-		Use:   "findusers [user]",
-		Short: "List profiles for a user",
-		Long:  `authobjusers will list profiles for a user.`,
+
+	var cmdChangeDocs = &cobra.Command{
+		Use:   "changedocs [user]",
+		Short: "Search changedocs",
+		Long:  `changedocs will list change documents that match the parameters.`,
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			s := sap.RFC{}
+
+			err := s.Connect(abapSystem)
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			params := map[string]interface{}{
+				"IT_USER": []map[string]interface{}{
+					map[string]interface{}{
+						"SIGN": "I",
+						"LOW":  args[0],
+					}},
+				"IV_PASS": true,
+				"IV_ROLE": true,
+				"IV_PROF": true,
+			}
+			result, err := s.Call("SUSR_SUIM_API_RSUSR100N", params)
+			if err != nil {
+				log.Fatalln(err)
+			}
+
+			users, ok := result["ET_USERS"]
+			if !ok {
+				arr := result["RETURN"].([]interface{})
+				ret := arr[0].(map[string]interface{})
+				log.Fatalf("%s\n", ret["MESSAGE"])
+			}
+
+			j, err := json.MarshalIndent(users, "", "  ")
+			if err != nil {
+				log.Fatalln(err)
+			}
+			fmt.Printf("%s\n", j)
+		},
+	}
+
+	rootCmd.AddCommand(cmdChangeDocs)
+
+	var cmdUsers = &cobra.Command{
+		Use:   "users [user]",
+		Short: "Search users",
+		Long:  `users will list users that match the parameters.`,
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			s := sap.RFC{}
@@ -75,42 +88,17 @@ func init() {
 					"LOW":  args[0],
 				}},
 			}
-			rows, err := s.Call("SUSR_SUIM_API_RSUSR002", params)
+			result, err := s.Call("SUSR_SUIM_API_RSUSR002", params)
 			if err != nil {
 				log.Fatalln(err)
 			}
 
-			j, err := json.MarshalIndent(rows, "", "  ")
-			if err != nil {
-				log.Fatalln(err)
-			}
-			fmt.Printf("%s\n", j)
-		},
-	}
-	var cmdProfileUsers = &cobra.Command{
-		Use:   "profileusers [profile]",
-		Short: "List users with profile",
-		Long:  `profileusers will list users with a given profile.`,
-		Args:  cobra.MinimumNArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			s := sap.RFC{}
-
-			err := s.Connect(abapSystem)
-			if err != nil {
-				log.Fatalln(err)
+			users, ok := result["ET_USERS"]
+			if !ok {
+				log.Fatalf("Found no users: %v\n", result["RETURN"])
 			}
 
-			params := map[string]interface{}{
-				"PROFILES": []map[string]interface{}{map[string]interface{}{
-					"PROFILE": args[0],
-				}},
-			}
-			rows, err := s.Call("SUSR_GET_USERS_WITH_PROFS_RFC", params)
-			if err != nil {
-				log.Fatalln(err)
-			}
-
-			j, err := json.MarshalIndent(rows, "", "  ")
+			j, err := json.MarshalIndent(users, "", "  ")
 			if err != nil {
 				log.Fatalln(err)
 			}
@@ -118,36 +106,5 @@ func init() {
 		},
 	}
 
-	var cmdTable = &cobra.Command{
-		Use:   "table [SAP Table]",
-		Short: "Extract a table to JSON",
-		Long:  `table will extract a table from the SAP system and return a JSON representation.`,
-		Args:  cobra.MinimumNArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			s := sap.RFC{}
-
-			err := s.Connect(abapSystem)
-			if err != nil {
-				log.Fatalln(err)
-			}
-
-			rows, err := s.ReadTable(args[0], where)
-			if err != nil {
-				log.Fatalln(err)
-			}
-
-			j, err := json.MarshalIndent(rows, "", "  ")
-			if err != nil {
-				log.Fatalln(err)
-			}
-			fmt.Printf("%s\n", j)
-		},
-	}
-
-	cmdTable.Flags().StringVarP(&where, "where", "w", "", "ABAP WHERE clause to filter the table")
-
-	rootCmd.AddCommand(cmdTable)
-	rootCmd.AddCommand(cmdProfileUsers)
-	rootCmd.AddCommand(cmdUserProfiles)
-	rootCmd.AddCommand(cmdFindUsers)
+	rootCmd.AddCommand(cmdUsers)
 }

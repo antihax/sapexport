@@ -81,7 +81,8 @@ Use "sapexport [command] --help" for more information about a command.
   |   |       |       |
   |   |       |       |--5  ACTVT      <FLD> Activity                                                    
   |   |       |       |   |
-  |   |       |       |   |-----03                                                                         
+  |   |       |       |   |-----03  
+  |   |       |       |   |-----08                                                                       
   |   |       |       |
   |   |       |       |--5  CLASS      <FLD> User group in user master maintenance                       
   |   |       |           |
@@ -93,7 +94,8 @@ Use "sapexport [command] --help" for more information about a command.
   |   |               |
   |   |               |--5  ACTVT      <FLD> Activity                                                    
   |   |               |   |
-  |   |               |   |-----03                                                                         
+  |   |               |   |-----03      
+  |   |               |   |-----08                                                                      
   |   |               |
   |   |               |--5  PROFILE    <FLD> Auth. profile in user master maintenance                    
   |   |                   |
