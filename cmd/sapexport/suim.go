@@ -10,7 +10,7 @@ import (
 )
 
 func init() {
-
+	var file string
 	/*
 		    - SUSR_SUIM_API_RSUSR002: Users by complex selection criteria
 		    - SUSR_SUIM_API_RSUSR008_009_NEW: Users with critical combinations of auhthorizations
@@ -28,7 +28,7 @@ func init() {
 		Use:   "changedocs [user]",
 		Short: "Search changedocs",
 		Long:  `changedocs will list change documents that match the parameters.`,
-		Args:  cobra.MinimumNArgs(1),
+		Args:  cobra.MinimumNArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
 			s := sap.RFC{}
 
@@ -36,17 +36,25 @@ func init() {
 			if err != nil {
 				log.Fatalln(err)
 			}
-
-			params := map[string]interface{}{
-				"IT_USER": []map[string]interface{}{
-					map[string]interface{}{
-						"SIGN": "I",
-						"LOW":  args[0],
-					}},
-				"IV_PASS": true,
-				"IV_ROLE": true,
-				"IV_PROF": true,
+			var params map[string]interface{}
+			if file != "" {
+				params, err = readYaml(file)
+				if err != nil {
+					log.Fatalln(err)
+				}
+			} else {
+				params = map[string]interface{}{
+					"IT_USER": []map[string]interface{}{
+						map[string]interface{}{
+							"SIGN": "I",
+							"LOW":  args[0],
+						}},
+					"IV_PASS": true,
+					"IV_ROLE": true,
+					"IV_PROF": true,
+				}
 			}
+
 			result, err := s.Call("SUSR_SUIM_API_RSUSR100N", params)
 			if err != nil {
 				log.Fatalln(err)
@@ -68,12 +76,13 @@ func init() {
 	}
 
 	rootCmd.AddCommand(cmdChangeDocs)
+	cmdChangeDocs.Flags().StringVarP(&file, "file", "f", "", "YAML file containing query parameters")
 
 	var cmdUsers = &cobra.Command{
 		Use:   "users [user]",
 		Short: "Search users",
 		Long:  `users will list users that match the parameters.`,
-		Args:  cobra.MinimumNArgs(1),
+		Args:  cobra.MinimumNArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {
 			s := sap.RFC{}
 
@@ -82,12 +91,22 @@ func init() {
 				log.Fatalln(err)
 			}
 
-			params := map[string]interface{}{
-				"IT_USER": []map[string]interface{}{map[string]interface{}{
-					"SIGN": "I",
-					"LOW":  args[0],
-				}},
+			var params map[string]interface{}
+			if file != "" {
+				params, err = readYaml(file)
+				if err != nil {
+					log.Fatalln(err)
+				}
+			} else {
+				params = map[string]interface{}{
+					"IT_USER": []map[string]interface{}{map[string]interface{}{
+						"SIGN": "I",
+						"LOW":  args[0],
+					}},
+				}
 			}
+
+			fmt.Printf("%#v\n", params)
 			result, err := s.Call("SUSR_SUIM_API_RSUSR002", params)
 			if err != nil {
 				log.Fatalln(err)
@@ -107,4 +126,6 @@ func init() {
 	}
 
 	rootCmd.AddCommand(cmdUsers)
+	cmdUsers.Flags().StringVarP(&file, "file", "f", "", "YAML file containing query parameters")
+
 }
