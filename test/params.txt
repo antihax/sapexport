@@ -1,0 +1,51 @@
+Standard Selection:
+            IT_USER       User list
+            IT_GROUP      Group for Authorization
+            IT_UGROUP     User group general
+
+ Selection Criteria:
+            Documentation:
+            Logon Data:
+                IT_UALIAS     Selection options for Alias
+                IT_UTYPE      Selection options for user type
+                IT_SECPOL     Selection options for security policy
+                IT_SNC        Selection options for SNC
+                Selection by Locks:
+                    IV_USER_LOCK  Lock status Y=locked, N=unlocked, Space = irrelevant
+                    IV_PWD_LOCK   Lock status Y=locked, N=unlocked, Space = irrelevant
+                    IV_LOCK       All Users with administrator- or password locks: TRUE (='X') und FALSE (=' ')
+                    IV_UNLOCK     Only users without locks: TRUE (='X') und FALSE (=' ')
+                IV_FDATE      Validity date from
+                IV_TDATE      Validity date until
+                IT_LIC_TYPE   Selection options for license types
+                IT_ACCNT      Selection options for Account-Id
+                IT_KOSTL      Selection options for cost center
+            Default Values:
+                IT_STCOD      Selection options for start menu
+                IT_LANGU      Selection options for language
+                IV_DCPFM      Decimal format
+                IV_DATFM      Date format
+                IV_TIMEFM     Time format (12-/24-Hour display)
+                IT_SPLD       Output Device
+                IV_TZONE      Time zone
+                IV_CATTK      CATT Check indicator (TRUE (='X') und FALSE (=' '))
+                IT_PARID      Selection options for Set-/Get-Paramter-Id
+            Roles Profile:
+                IV_TCODE      Transaktionscode
+                IV_START_TX   Only executable transactions
+                IT_UREF       Selection options for reference user
+                IT_ACTGRPS    Selection options for role
+                IT_PROF1      Selection options for profile
+                IV_PROF2      Authorization profile in user master maintenance
+                IV_PROF3      Authorization profile in user master maintenance
+            Authorizations:
+                Selection by Field Name:
+                    IV_CONV1      Always convert Values (TRUE (='X') und FALSE (=' '))
+                    IV_AUTH_FLD   Authorization field name
+                Selection by Authorizations:
+                    IV_AUTH_VAL   Authorization value
+                    IT_OBJCT      Selection options for authorization objects
+                Selection by Values:
+                    IT_AUTH       Selection options for authorizations
+                    IV_CONV       Data element zur Domäne BOOLE: TRUE (='X') und FALSE (=' ')
+                    IT_VALUES     Transfer structure for selection by authorization value

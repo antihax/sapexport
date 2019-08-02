@@ -106,7 +106,6 @@ func init() {
 				}
 			}
 
-			fmt.Printf("%#v\n", params)
 			result, err := s.Call("SUSR_SUIM_API_RSUSR002", params)
 			if err != nil {
 				log.Fatalln(err)
