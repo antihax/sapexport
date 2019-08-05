@@ -3,7 +3,9 @@ package sapexport
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/antihax/sapexport/cmd/sapexport/sap"
 	"github.com/spf13/cobra"
@@ -11,6 +13,7 @@ import (
 
 func init() {
 	var file string
+	var stdin bool
 
 	var cmdRun = &cobra.Command{
 		Use:   "run",
@@ -24,9 +27,19 @@ func init() {
 			if err != nil {
 				log.Fatalln(err)
 			}
+
 			var params map[string]interface{}
 			if file != "" {
-				params, err = readYaml(file)
+				params, err = readYamlFile(file)
+				if err != nil {
+					log.Fatalln(err)
+				}
+			} else if stdin {
+				data, err := ioutil.ReadAll(os.Stdin)
+				if err != nil {
+					log.Fatalln(err)
+				}
+				params, err = readYaml(data)
 				if err != nil {
 					log.Fatalln(err)
 				}
@@ -37,14 +50,7 @@ func init() {
 				log.Fatalln(err)
 			}
 
-			users, ok := result["ET_USERS"]
-			if !ok {
-				arr := result["RETURN"].([]interface{})
-				ret := arr[0].(map[string]interface{})
-				log.Fatalf("%s\n", ret["MESSAGE"])
-			}
-
-			j, err := json.MarshalIndent(users, "", "  ")
+			j, err := json.MarshalIndent(result, "", "  ")
 			if err != nil {
 				log.Fatalln(err)
 			}
@@ -54,5 +60,6 @@ func init() {
 
 	rootCmd.AddCommand(cmdRun)
 	cmdRun.Flags().StringVarP(&file, "file", "f", "", "YAML file containing query parameters")
+	cmdRun.Flags().BoolVarP(&stdin, "stdin", "S", false, "Read YAML parameters from STDIN")
 
 }

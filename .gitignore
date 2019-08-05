@@ -16,3 +16,4 @@ debug
 *.trc
 /bin/*
 *.json
+*.note

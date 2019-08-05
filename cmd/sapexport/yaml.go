@@ -6,13 +6,17 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
-func readYaml(path string) (map[string]interface{}, error) {
-	v := make(map[string]interface{})
+func readYamlFile(path string) (map[string]interface{}, error) {
 	yamlFile, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
-	err = yaml.Unmarshal(yamlFile, v)
+	return readYaml(yamlFile)
+}
+
+func readYaml(data []byte) (map[string]interface{}, error) {
+	v := make(map[string]interface{})
+	err := yaml.Unmarshal(data, v)
 	if err != nil {
 		return nil, err
 	}
