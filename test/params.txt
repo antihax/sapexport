@@ -1,7 +1,20 @@
+
+	
+    - SUSR_SUIM_API_RSUSR002: Users by complex selection criteria
+    - SUSR_SUIM_API_RSUSR008_009_NEW: Users with critical combinations of auhthorizations
+    - SUSR_SUIM_API_RSUSR020: Profiles by complex selection criteria
+    - SUSR_SUIM_API_RSUSR050_AUTH: Authorization Comparison
+    - SUSR_SUIM_API_RSUSR050_PROF: Profile Comparison
+    - SUSR_SUIM_API_RSUSR050_ROLE: Role Comparison
+    - SUSR_SUIM_API_RSUSR050_USER: User Comparison
+    - SUSR_SUIM_API_RSUSR070: Roles by complex search criteria
+    - SUSR_SUIM_API_RSUSR100N: Change documents for users
+    - SUSR_SUIM_API_RSUSR200: Users according to logon date and password change
+	
 Standard Selection:
-            IT_USER       User list
-            IT_GROUP      Group for Authorization
-            IT_UGROUP     User group general
+    IT_USER       User list
+    IT_GROUP      Group for Authorization
+    IT_UGROUP     User group general
 
  Selection Criteria:
             Documentation:
