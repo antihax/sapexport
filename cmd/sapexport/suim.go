@@ -8,12 +8,49 @@ import (
 	"os"
 
 	"github.com/antihax/sapexport/cmd/sapexport/sap"
+	"github.com/ghodss/yaml"
 	"github.com/spf13/cobra"
 )
 
+var file string
+var format string
+
+var stdin bool
+
+func getParameters() (map[string]interface{}, error) {
+	if file != "" {
+		return readYamlFile(file)
+	} else if stdin {
+		data, err := ioutil.ReadAll(os.Stdin)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		return readYaml(data)
+	}
+	return nil, nil
+}
+
+func outputResult(v interface{}) error {
+	switch format {
+	case "yaml":
+		j, err := yaml.Marshal(v)
+		if err != nil {
+			return err
+		}
+		fmt.Printf("%s\n", j)
+
+	default:
+		j, err := json.MarshalIndent(v, "", "  ")
+		if err != nil {
+			return err
+		}
+		fmt.Printf("%s\n", j)
+
+	}
+	return nil
+}
+
 func init() {
-	var file string
-	var stdin bool
 
 	var cmdRun = &cobra.Command{
 		Use:   "run",
@@ -28,21 +65,9 @@ func init() {
 				log.Fatalln(err)
 			}
 
-			var params map[string]interface{}
-			if file != "" {
-				params, err = readYamlFile(file)
-				if err != nil {
-					log.Fatalln(err)
-				}
-			} else if stdin {
-				data, err := ioutil.ReadAll(os.Stdin)
-				if err != nil {
-					log.Fatalln(err)
-				}
-				params, err = readYaml(data)
-				if err != nil {
-					log.Fatalln(err)
-				}
+			params, err := getParameters()
+			if err != nil {
+				log.Fatalln(err)
 			}
 
 			result, err := s.Call(args[0], params)
@@ -50,16 +75,14 @@ func init() {
 				log.Fatalln(err)
 			}
 
-			j, err := json.MarshalIndent(result, "", "  ")
-			if err != nil {
+			if err := outputResult(result); err != nil {
 				log.Fatalln(err)
 			}
-			fmt.Printf("%s\n", j)
 		},
 	}
 
 	rootCmd.AddCommand(cmdRun)
 	cmdRun.Flags().StringVarP(&file, "file", "f", "", "YAML file containing query parameters")
+	cmdRun.Flags().StringVarP(&format, "format", "F", "", "Output as yaml or json")
 	cmdRun.Flags().BoolVarP(&stdin, "stdin", "S", false, "Read YAML parameters from STDIN")
-
 }
